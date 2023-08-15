@@ -11,7 +11,7 @@ $(function(){
             for(var post of response){
                 $("#more-posts").append(
                     "<div class=\"post-preview\">" +
-                    "<a href=\"#\">" +
+                    "<a href=\"/post/"+ post.id +"\">" +
                     "<h2 class=\"post-title\">" +
                     post.title +
                     "</h2>\n" +
@@ -23,6 +23,50 @@ $(function(){
             }
         });
         $(this).attr("current-page", next_page);
+    });
+
+    $("#create_button").click(function(){
+        var title = $("#post-title").val();
+        var username = $("#post-username").val();
+        var content = $("#post-content").val();
+
+        $.ajax({
+            method: "POST",
+            url: "/post",
+            data: JSON.stringify({
+                "title":title,
+                "username":username,
+                "content":content
+            }),
+            //json 형태로 전송하기 위해 설정하는 방법
+            contentType: "application/json"
+        })
+        .done(function(response){
+            console.log("Post creation success!");
+            window.location.href = "/";
+        }); //response 에는 성공시 success가 들어가 있을것
+    });
+
+    $("#edit_button").click(function(){
+        var id = $("#edit-post-id").val();
+        var title = $("#edit-post-title").val();
+        var content = $("#edit-post-content").val();
+
+        $.ajax({
+            method: "PUT",
+            url: "/post",
+            data: JSON.stringify({
+                "id":id,
+                "title":title,
+                "content":content
+            }),
+            //json 형태로 전송하기 위해 설정하는 방법
+            contentType: "application/json"
+        })
+        .done(function(response){
+            console.log("Post edit success!");
+            window.location.href = "/post/" + id;
+        }); //response 에는 성공시 success가 들어가 있을것
     });
 
     $(".comment-edit").hide();
